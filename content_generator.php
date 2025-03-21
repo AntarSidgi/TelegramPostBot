@@ -81,6 +81,32 @@ function generateContentWithGemini($contentType) {
 }
 
 /**
+ * تحويل النص إلى صيغة ماركداون تلغرام - Convert text to Telegram Markdown format
+ */
+function convertToTelegramMarkdown($content) {
+    // تحويل العناوين الرئيسية (## Heading) إلى نص غامق (*Heading*)
+    // Convert main headings (## Heading) to bold text (*Heading*)
+    $content = preg_replace('/^##\s+(.+)$/m', '*$1*', $content);
+    
+    // تحويل النصوص الغامقة من صيغة ** إلى صيغة *
+    // Convert bold text from ** format to * format
+    $content = preg_replace('/\*\*(.*?)\*\*/', '*$1*', $content);
+    
+    // تحويل قوائم النقاط إلى شرطات
+    // Convert bullet points to dashes
+    $content = preg_replace('/^\*\s+(.+)$/m', '- $1', $content);
+    
+    // تحويل أقسام المحتوى المعروفة إلى صيغة غامقة
+    // Convert known content sections to bold format
+    $specialSections = ['نصائح ذهبية', 'أدوات وتقنيات حديثة', 'كلمة أخيرة'];
+    foreach ($specialSections as $section) {
+        $content = str_replace($section . ':', '*' . $section . ':*', $content);
+    }
+    
+    return $content;
+}
+
+/**
  * تنظيف وتنسيق المحتوى - Clean up and format content
  */
 function cleanupContent($content) {
@@ -92,6 +118,10 @@ function cleanupContent($content) {
         // تقسيم النص الطويل إلى فقرات - Split long text into paragraphs
         $content = wordwrap($content, 100, "\n\n");
     }
+    
+    // تحويل المحتوى إلى صيغة ماركداون تلغرام
+    // Convert content to Telegram Markdown format
+    $content = convertToTelegramMarkdown($content);
     
     // إضافة هاشتاغات مناسبة - Add relevant hashtags
     $hashtags = "\n\n#تطوير #تقنية #برمجة";
