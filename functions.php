@@ -26,7 +26,8 @@ function sendTelegramMessage($chat_id, $text, $parse_mode = 'HTML') {
  * نشر محتوى في القناة - Post content to the channel
  */
 function postToChannel($content) {
-    $response = sendTelegramMessage(CHANNEL_ID, $content);
+    // تعديل استخدام وضع تنسيق ماركداون - Use Markdown parse mode
+    $response = sendTelegramMessage(CHANNEL_ID, $content, 'Markdown');
     
     // تسجيل المنشور في سجل النشر - Log the post
     logPosting([
